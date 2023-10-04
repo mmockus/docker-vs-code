@@ -1,0 +1,37 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main # Modify this to match your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      IMAGE_NAME: code-server-ssh # Replace with your desired image name
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Check for changes in the code-server directory
+      run: |
+        if git diff --quiet HEAD^..HEAD -- code-server/; then
+          echo "No changes in code-server directory. Skipping Docker build."
+          exit 0
+        fi
+
+    - name: Change working directory to Dockerfile location
+      run: cd code-server
+
+    - name: Login to Docker Hub
+      run: docker login -u $DOCKER_USERNAME -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
+
+    - name: Push Docker image to Docker Hub
+      run: docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
