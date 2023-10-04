@@ -28,7 +28,7 @@ jobs:
 
 
     - name: Am I in the right directory
-      working-directory: ./$DOCKERFILE
+      working-directory: $DOCKERFILE
       run: ls
 
     - name: Login to Docker Hub
