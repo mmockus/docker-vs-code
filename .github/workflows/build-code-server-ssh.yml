@@ -26,7 +26,6 @@ jobs:
           exit 0
         fi
 
-
     - name: Am I in the right directory
       working-directory: ${{ env.DOCKERFILE }}
       run: ls
@@ -35,7 +34,9 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker image
+      working-directory: ${{ env.DOCKERFILE }}
       run: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:latest .
 
     - name: Push Docker image to Docker Hub
+      working-directory: ${{ env.DOCKERFILE }}
       run: docker push $DOCKER_USERNAME/$IMAGE_NAME:latest
