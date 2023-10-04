@@ -11,7 +11,9 @@ jobs:
 
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKERFILE: code-server
       IMAGE_NAME: code-server-ssh # Replace with your desired image name
+      
 
     steps:
     - name: Checkout code
@@ -25,7 +27,10 @@ jobs:
         fi
 
     - name: Change working directory to Dockerfile location
-      run: cd code-server
+      run: cd $DOCKERFILE
+
+    - name: Am I in the right directory
+      run: ls
 
     - name: Login to Docker Hub
       run: docker login -u $DOCKER_USERNAME -p ${{ secrets.DOCKER_PASSWORD }}
